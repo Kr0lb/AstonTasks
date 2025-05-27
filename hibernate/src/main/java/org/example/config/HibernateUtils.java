@@ -21,7 +21,6 @@ public class HibernateUtils {
     }
 
     public static void shutdown() {
-        // Закрываем сеансы
         if (sessionFactory != null) {
             sessionFactory.close();
         }
