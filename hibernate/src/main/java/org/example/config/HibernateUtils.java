@@ -1,4 +1,4 @@
-package org.example;
+package org.example.config;
 
 import lombok.Getter;
 import org.hibernate.SessionFactory;
@@ -12,7 +12,7 @@ public class HibernateUtils {
     private static SessionFactory buildSessionFactory() {
         try {
             return new Configuration()
-                    .configure("hibernate.properties") // Укажите путь к файлу properties
+                    .configure("hibernate.cfg.xml")
                     .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
