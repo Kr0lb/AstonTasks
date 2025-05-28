@@ -70,7 +70,7 @@ public class HibernateApplication {
                 });
                 case "0" -> {
                     System.out.println("Сессия завершена");
-                    session.close();
+                    HibernateUtils.shutdown();
                     return;
                 }
                 default -> System.out.println("Команда не распознана!");
