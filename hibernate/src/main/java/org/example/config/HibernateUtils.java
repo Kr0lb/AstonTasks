@@ -1,9 +1,11 @@
 package org.example.config;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+@Slf4j
 public class HibernateUtils {
 
     @Getter
@@ -15,7 +17,7 @@ public class HibernateUtils {
                     .configure("hibernate.cfg.xml")
                     .buildSessionFactory();
         } catch (Throwable ex) {
-            System.err.println("Initial SessionFactory creation failed." + ex);
+            log.error("User saved: {}", ex.getMessage());
             throw new ExceptionInInitializerError(ex);
         }
     }
