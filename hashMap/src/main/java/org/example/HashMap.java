@@ -123,7 +123,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
             newCap = DEFAULT_INITIAL_CAPACITY;
         else if (oldCap >= DEFAULT_INITIAL_CAPACITY)
             threshold = newCap = oldCap * 2;
-        else newCap = oldCap;//fixme:затычка
+        else newCap = oldCap;
         if (newCap > MAXIMUM_CAPACITY)
             newCap = MAXIMUM_CAPACITY;
 
