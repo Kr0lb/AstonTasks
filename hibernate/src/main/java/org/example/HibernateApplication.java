@@ -25,8 +25,7 @@ public class HibernateApplication {
                     4 - удалить пользователя
                     5 - найти пользователя по id
                     0 - выход
-                    Выберите действие:
-                    """);
+                    Выберите действие:""");
 
             switch (input.next()) {
                 case "1" -> ExceptionHandler.runSafe(() -> System.out.println(rep.findAll()));
@@ -48,8 +47,7 @@ public class HibernateApplication {
                             1 - имя
                             2 - email
                             3 - возраст
-                            Выберете параметр для изменения:
-                            """);
+                            Выберете параметр для изменения:""");
                     switch (input.next()) {
                         case "1" -> user.setName(input.next());
                         case "2" -> user.setEmail(input.next());
@@ -62,7 +60,7 @@ public class HibernateApplication {
                 case "4" -> ExceptionHandler.runSafe(() -> {
                     System.out.print("Введите id пользователя:");
                     rep.delete(Long.parseLong(input.next()));
-
+                    System.out.println("Пользователь успешно удален");
                 });
                 case "5" -> ExceptionHandler.runSafe(() -> {
                     System.out.print("Введите id пользователя:");
