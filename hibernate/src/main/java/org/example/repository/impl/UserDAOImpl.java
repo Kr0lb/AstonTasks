@@ -10,8 +10,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.exception.SQLGrammarException;
 
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,13 +25,15 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findById(Long id) {
         Transaction tx;
-        User user = null;
+        User user;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
             user = session.get(User.class, id);
             tx.commit();
         } catch (Exception e) {
+            System.err.println("Ошибка поиска пользователя");
             log.error("Failed to find user with id {}", id);
+            throw new RuntimeException();
         }
         return user;
     }
@@ -40,19 +43,30 @@ public class UserDAOImpl implements UserDAO {
         Session session = null;
         Transaction tx = null;
         try {
+            user.setCreatedAt(LocalDateTime.now());
             session = sessionFactory.openSession();
             tx = session.beginTransaction();
             session.persist(user);
             tx.commit();
             log.info("User saved: {}", user);
         } catch (HibernateException e) {
-            log.error("Hibernate error: {}", e.getMessage());
-        } catch (PersistenceException e) {
-            handleConstraintViolation(e);
-        } catch (Exception e) {
-            log.error("Unexpected error");
-        } finally {
             rollbackIsActive(tx);
+            if (e instanceof SQLGrammarException) {
+                System.err.println("Ошибка синтаксиса SQL: " + e.getMessage());
+            } else System.err.println("Ошибка Hibernate");
+            throw new RuntimeException();
+        } catch (PersistenceException e) {
+            rollbackIsActive(tx);
+            if (e.getCause() instanceof ConstraintViolationException) {
+                System.err.println("Ошибка ограничений базы данных: " + e.getCause().getCause().getMessage());
+            } else System.err.println("Ошибка при работе с JPA");
+            throw new RuntimeException();
+        } catch (Exception e) {
+            rollbackIsActive(tx);
+            System.err.println("Неизвестная ошибка");
+            log.error("Unexpected error");
+            throw new RuntimeException();
+        } finally {
             closeSession(session);
         }
     }
@@ -67,14 +81,24 @@ public class UserDAOImpl implements UserDAO {
             session.merge(user);
             tx.commit();
             log.info("User updated: {}", user);
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
         } catch (HibernateException e) {
-            log.error("Hibernate error on update: {}", e.getMessage());
-        } catch (Exception e) {
-            log.error("Unexpected error on update: {}", e.getMessage());
-        } finally {
             rollbackIsActive(tx);
+            if (e instanceof SQLGrammarException) {
+                System.err.println("Ошибка синтаксиса SQL: " + e.getMessage());
+            } else System.err.println("Ошибка Hibernate");
+            throw new RuntimeException();
+        } catch (PersistenceException e) {
+            rollbackIsActive(tx);
+            if (e.getCause() instanceof ConstraintViolationException) {
+                System.err.println("Ошибка ограничений базы данных: " + e.getCause().getCause().getMessage());
+            } else System.err.println("Ошибка при работе с JPA");
+            throw new RuntimeException();
+        } catch (Exception e) {
+            rollbackIsActive(tx);
+            System.err.println("Неизвестная ошибка");
+            log.error("Unexpected error on update: {}", e.getMessage());
+            throw new RuntimeException();
+        } finally {
             closeSession(session);
         }
     }
@@ -89,14 +113,24 @@ public class UserDAOImpl implements UserDAO {
             User user = session.get(User.class, id);
             session.remove(user);
             tx.commit();
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
         } catch (HibernateException e) {
-            log.error("Hibernate error on delete: {}", e.getMessage());
-        } catch (Exception e) {
-            log.error("Unexpected error on delete: {}", e.getMessage());
-        } finally {
             rollbackIsActive(tx);
+            if (e instanceof SQLGrammarException) {
+                System.err.println("Ошибка синтаксиса SQL: " + e.getMessage());
+            } else System.err.println("Ошибка Hibernate");
+            throw new RuntimeException();
+        } catch (PersistenceException e) {
+            rollbackIsActive(tx);
+            if (e.getCause() instanceof ConstraintViolationException) {
+                System.err.println("Ошибка ограничений базы данных: " + e.getCause().getCause().getMessage());
+            } else System.err.println("Ошибка при работе с JPA");
+            throw new RuntimeException();
+        } catch (Exception e) {
+            rollbackIsActive(tx);
+            System.err.println("Неизвестная ошибка");
+            log.error("Unexpected error on delete: {}", e.getMessage());
+            throw new RuntimeException();
+        } finally {
             closeSession(session);
         }
     }
@@ -121,21 +155,5 @@ public class UserDAOImpl implements UserDAO {
 
     private void closeSession(Session session) {
         if (session != null && session.isOpen()) session.close();
-    }
-
-    private void handleConstraintViolation(PersistenceException e) { //fixme: переделать на sout, изза SQLExceptionHelper
-        SQLException sqlEx = (SQLException) e.getCause().getCause();
-        String sqlState = sqlEx.getSQLState();
-
-        switch (sqlState) {
-            case "23505":
-                log.error("Unique constraint violated: {}", sqlEx.getMessage());
-                break;
-            case "23502":
-                log.error("Not-null constraint violated: {}", sqlEx.getMessage());
-                break;
-            default:
-                log.error("Constraint violation: {}", sqlEx.getMessage());
-        }
     }
 }

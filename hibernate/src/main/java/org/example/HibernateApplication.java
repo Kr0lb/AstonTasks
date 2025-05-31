@@ -11,10 +11,11 @@ import java.util.Scanner;
 public class HibernateApplication {
 
     private static final Scanner input = new Scanner(System.in);
+    private static UserDAOImpl rep;
 
     public static void main(String[] args) {
 
-        UserDAOImpl rep = new UserDAOImpl(HibernateUtils.getSessionFactory());
+        rep = new UserDAOImpl(HibernateUtils.getSessionFactory());
 
         while (true) {
             System.out.print("""
@@ -27,56 +28,44 @@ public class HibernateApplication {
                     Выберите действие:""");
 
             switch (input.next()) {
-                case "1" -> System.out.println(rep.findAll());
+                case "1" -> {
+                    for (User user : rep.findAll())
+                        System.out.println(user);
+                }
                 case "2" -> {
                     try {
-                        User user = new User();
-                        System.out.print("Введите имя:");
-                        user.setName(input.next());
-                        System.out.print("Введите email:");
-                        user.setEmail(input.next());
-                        System.out.print("Введите возраст:");
-                        user.setAge(Integer.parseInt(input.next()));
-                        rep.save(user);
-                        System.out.println("Пользователь был сохранен");
+                        createUser();
                     } catch (Exception e) {
-                        log.error(e.getMessage());
+                        System.err.println("Сохранение было прервано");
+                        break;
                     }
+                    System.out.println("Пользователь успешно сохранен");
                 }
                 case "3" -> {
                     try {
-                        System.out.print("Введите id пользователя для изменения данных:");
-                        User user = rep.findById(Long.parseLong(input.next()));
-                        System.out.println("""
-                                1 - имя
-                                2 - email
-                                3 - возраст
-                                Выберете параметр для изменения:""");
-                        switch (input.next()) {
-                            case "1" -> user.setName(input.next());
-                            case "2" -> user.setEmail(input.next());
-                            case "3" -> user.setAge(Integer.parseInt(input.next()));
-                            default -> System.out.println("Команда не распознан");
-                        }
-                        rep.update(user);
-//                        System.out.println("Данные пользователя обновлены");
+                        updateUser();
                     } catch (Exception e) {
-                        log.error(e.getMessage());
+                        System.err.println("Обновление было прервано");
+                        break;
                     }
+                    System.out.println("Данные пользователя обновлены");
                 }
                 case "4" -> {
                     try {
-                        System.out.print("Введите id пользователя:");
-                        rep.delete(Long.parseLong(input.next()));
-//                        System.out.println("Пользователь успешно удален");
+                        deleteUser();
                     } catch (Exception e) {
-                        log.error(e.getMessage());
+                        System.err.println("Удаление было прервано");
+                        break;
                     }
+                    System.out.println("Пользователь успешно удален");
                 }
                 case "5" -> {
                     try {
                         System.out.print("Введите id пользователя:");
                         System.out.println(rep.findById(Long.parseLong(input.next())));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Неправильный ввод id пользователя");
+                        log.error("Number conversion error: {}", e.getMessage());
                     } catch (Exception e) {
                         log.error(e.getMessage());
                     }
@@ -88,6 +77,72 @@ public class HibernateApplication {
                 }
                 default -> System.out.println("Команда не распознана!");
             }
+        }
+    }
+
+    public static void createUser() {
+        try {
+            User user = new User();
+            System.out.print("Введите имя:");
+            user.setName(input.next());
+            System.out.print("Введите email:");
+            user.setEmail(input.next());
+            System.out.print("Введите возраст:");
+            user.setAge(Integer.parseInt(input.next()));
+            rep.save(user);
+        } catch (NumberFormatException e) {
+            System.err.println("Неправильный ввод возраста");
+            log.error("Number conversion error: {}", e.getMessage());
+            throw new RuntimeException();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException();
+        }
+    }
+
+    public static void updateUser() {
+        try {
+            boolean stop = false;
+            System.out.print("Введите id пользователя для изменения данных:");
+            User user = rep.findById(Long.parseLong(input.next()));
+            System.out.println("""
+                    1 - имя
+                    2 - email
+                    3 - возраст
+                    0 - завершить
+                    Выберете параметр для изменения:""");
+            while (!stop) {
+                switch (input.next()) {
+                    case "1" -> {
+                        System.out.print("Введите имя:");
+                        user.setName(input.next());
+                    }
+                    case "2" -> user.setEmail(input.next());
+                    case "3" -> user.setAge(Integer.parseInt(input.next()));
+                    case "0" -> stop = true;
+                    default -> System.out.println("Команда не распознан");
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Неправильный ввод числа");
+            log.error("Number conversion error: {}", e.getMessage());
+            throw new RuntimeException();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException();
+        }
+    }
+
+    public static void deleteUser() {
+        try {
+            System.out.print("Введите id пользователя:");
+            rep.delete(Long.parseLong(input.next()));
+        } catch (NumberFormatException e) {
+            System.err.println("Неправильный ввод id пользователя");
+            log.error("Number conversion error: {}", e.getMessage());
+            throw new RuntimeException();
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 }
