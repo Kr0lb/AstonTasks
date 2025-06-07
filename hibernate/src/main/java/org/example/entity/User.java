@@ -20,4 +20,8 @@ public class User {
     private String email;
     private Integer age;
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public User(String name) {
+        this.name = name;
+    }
 }
