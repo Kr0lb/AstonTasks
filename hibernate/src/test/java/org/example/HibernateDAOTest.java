@@ -57,6 +57,21 @@ public class HibernateDAOTest {
     }
 
     @Test
+    void testUpdate() {
+        User user = new User();
+        user.setName("Test User");
+        userDAO.save(user);
+
+        user.setName("Updated Test User");
+        userDAO.update(user);
+
+        Assertions.assertNotNull(user.getId());
+
+        User found = userDAO.findById(user.getId());
+        Assertions.assertEquals("Updated Test User", found.getName());
+    }
+
+    @Test
     void testFindAll() {
         userDAO.save(new User("test user 1"));
         userDAO.save(new User("test user 2"));

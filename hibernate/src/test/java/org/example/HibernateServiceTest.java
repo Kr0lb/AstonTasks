@@ -29,14 +29,14 @@ public class HibernateServiceTest {
 
         Mockito.when(userDao.findById(100L)).thenReturn(mockUser);
 
-        String name = userService.getUSerById(100L).getName();
+        String name = userService.getUserById(100L).getName();
         Assertions.assertEquals("MockName", name);
     }
 
     @Test
     void testGetUserNotFound() {
         Mockito.when(userDao.findById(999L)).thenReturn(null);
-        Assertions.assertThrows(RuntimeException.class, () -> userService.getUSerById(999L));
+        Assertions.assertThrows(RuntimeException.class, () -> userService.getUserById(999L));
     }
 
     @Test

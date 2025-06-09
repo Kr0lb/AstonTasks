@@ -9,8 +9,11 @@ public class UserService {
 
     private final UserDAO userDAO;
 
-    public User getUSerById(Long id) {
-        return userDAO.findById(id);
+    public User getUserById(Long id) {
+        User user = userDAO.findById(id);
+        if (user == null)
+            throw new RuntimeException("User not found");
+        return user;
     }
 
     public void createUser(User user) {
