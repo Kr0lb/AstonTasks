@@ -19,6 +19,7 @@ public class User {
     private String name;
     private String email;
     private Integer age;
+    @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public User(String name) {

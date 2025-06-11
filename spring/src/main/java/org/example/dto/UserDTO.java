@@ -1,19 +1,22 @@
 package org.example.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * DTO for {@link org.example.entity.User}
  */
 
-@Value
-public class UserDTO implements Serializable {
-    Long id;
-    String name;
-    String email;
-    Integer age;
-    LocalDateTime createdAt;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDTO {
+    private Long id;
+    private String name;
+    private String email;
+    private Integer age;
+    private LocalDateTime createdAt;
 }
