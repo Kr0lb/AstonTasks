@@ -28,9 +28,9 @@ public class UserService {
         return mapper.toDto(user, UserDTO.class);
     }
 
-    public UserDTO deleteUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return mapper.toDto(user, UserDTO.class);
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
     }
 
     public List<UserDTO> getAllUsers() {
