@@ -1,0 +1,45 @@
+package org.example.service;
+
+import lombok.RequiredArgsConstructor;
+import org.example.dto.UserDTO;
+import org.example.entity.User;
+import org.example.mapper.Mapper;
+import org.example.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final Mapper<User, UserDTO> mapper;
+
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = mapper.toEntity(userDTO, User.class);
+        user = userRepository.save(user);
+        return mapper.toDto(user, UserDTO.class);
+    }
+
+    public UserDTO updateUser(UserDTO userDTO) {
+        User user = mapper.toEntity(userDTO, User.class);
+        user = userRepository.save(user);
+        return mapper.toDto(user, UserDTO.class);
+    }
+
+    public UserDTO deleteUser(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return mapper.toDto(user, UserDTO.class);
+    }
+
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return mapper.toDtos(users, UserDTO.class);
+    }
+
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return mapper.toDto(user, UserDTO.class);
+    }
+}
