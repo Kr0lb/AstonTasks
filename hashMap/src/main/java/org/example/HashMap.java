@@ -50,16 +50,16 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
     }
 
     public V get(Object key) {
-        int n;
+        int n, keyHash = hash(key);
         Node<K, V> node;
         Node<K, V>[] tab;
         if ((tab = table) != null && (n = tab.length) > 0 &&
-                (node = tab[(n - 1) & hash(key)]) != null) {
-            if (node.hash == hash(key)) {
+                (node = tab[(n - 1) & keyHash]) != null) {
+            if (node.hash == keyHash) {
                 return node.value;
             } else {
                 do {
-                    if (node.hash == hash(key)) return node.value;
+                    if (node.hash == keyHash) return node.value;
                 } while ((node = node.next) != null);
             }
         }
@@ -68,16 +68,16 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
     public V put(K key, V value) {
         Node<K, V>[] tab;
-        int n, i;
+        int n, i, keyHash = hash(key);
         if (key == null) throw new NullPointerException("key is null");
         if ((tab = table) == null || (n = table.length) == 0) n = (tab = resize()).length;
-        if (tab[i = (hash(key) & (n - 1))] == null)
-            tab[i] = new Node<>(hash(key), key, value, null);
+        if (tab[i = (keyHash & (n - 1))] == null)
+            tab[i] = new Node<>(keyHash, key, value, null);
         else {
             Node<K, V> node = tab[i];
             for (; ; ) {
                 if (node.next == null) {
-                    node.next = new Node<>(hash(key), key, value, null);
+                    node.next = new Node<>(keyHash, key, value, null);
                     break;
                 } else node = node.next;
             }
