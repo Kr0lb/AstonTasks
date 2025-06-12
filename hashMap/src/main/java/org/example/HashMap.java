@@ -88,23 +88,23 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
     }
 
     public V remove(Object key) {
-        int n;
+        int n, i, keyHash = hash(key);
         Node<K, V> node, had, p;
         Node<K, V>[] tab;
         if ((tab = table) != null && (n = tab.length) > 0 &&
-                (p = node = tab[(n - 1) & hash(key)]) != null) {
-            if (node.hash == hash(key)) {
+                (p = node = tab[(i = ((n - 1) & keyHash))]) != null) {
+            if (node.hash == keyHash) {
                 if (node.next == null) {
-                    table[hash(key) & (n - 1)] = null;
+                    table[i] = null;
                 } else {
-                    table[hash(key) & (n - 1)] = node.next;
+                    table[i] = node.next;
                 }
                 size--;
                 return node.value;
-            } else {
+            } else if (node.next != null) {
                 had = node;
                 do {
-                    if (node.next.hash == hash(key)) {
+                    if (node.next.hash == keyHash) {
                         node.next = node.next.next;
                         table[had.hash & (n - 1)] = had;
                         size--;

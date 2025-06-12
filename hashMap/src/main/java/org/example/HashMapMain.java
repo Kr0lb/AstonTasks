@@ -1,5 +1,6 @@
 package org.example;
 
+
 public class HashMapMain {
     public static void main(String[] args) {
         HashMap<String, String> map = new HashMap<>();
@@ -7,7 +8,8 @@ public class HashMapMain {
             map.put("key" + i, "value" + i);
         }
 
-        map.remove("key11");
+        map.remove("key16");
+        map.remove("key13");
 
 
         for (int i = 1; i <= 15; i++) {
