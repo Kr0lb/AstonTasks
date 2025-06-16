@@ -1,6 +1,7 @@
 package org.example.mapper.impl;
 
 import org.example.mapper.Mapper;
+import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +11,10 @@ import java.util.List;
 public class MapperImpl<E, D>
         implements Mapper<E, D> {
 
-    static {
-        Mapper.mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    private final ModelMapper mapper = new ModelMapper();
+
+    {
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
     @Override

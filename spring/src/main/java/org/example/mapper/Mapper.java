@@ -12,8 +12,6 @@ import java.util.List;
  */
 public interface Mapper<E, D> {
 
-    ModelMapper mapper = new ModelMapper();
-
     /**
      * Map entity to dto
      *
