@@ -13,12 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final KafkaEventProducer kafkaEventProducer;
+
     private final UserRepository userRepository;
     private final Mapper<User, UserDTO> mapper;
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = mapper.toEntity(userDTO, User.class);
         user = userRepository.save(user);
+        kafkaEventProducer.send("user-create", "пользователь создан");
         return mapper.toDto(user, UserDTO.class);
     }
 
@@ -30,6 +33,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        kafkaEventProducer.send("user-delete", "пользователь удален");
         userRepository.delete(user);
     }
 
