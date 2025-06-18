@@ -19,6 +19,7 @@
         <module>hashMap</module>
         <module>hibernate</module>
         <module>spring</module>
+        <module>notifdication-service</module>
     </modules>
 
     <properties>
