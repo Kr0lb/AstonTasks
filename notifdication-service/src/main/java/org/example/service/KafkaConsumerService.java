@@ -1,23 +1,28 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KafkaConsumerService {
     private final EmailService emailService;
 
-    @KafkaListener(topics = "user-create", groupId = "notification-group")
-    public void listenUserCreate(String email) {
-        emailService.sendEmail(email, "Create", "Здравствуйте! Ваш аккаунт на сайте forum был успешно создан.");
-        System.err.println("create");
-    }
+    @KafkaListener(topics = "user-events", groupId = "notification-group")
+    public void listenUserCreate(String message) {
+        String[] parts = message.split(":");
+        String events = parts[0];
+        String email = parts[1];
 
-    @KafkaListener(topics = "user-delete", groupId = "notification-group")
-    public void listenUserDelete(String email) {
-        emailService.sendEmail(email, "Delete", "Здравствуйте! Ваш аккаунт был удалён.");
-        System.err.println("create");
+        switch (events) {
+            case "CREATE" ->
+                    emailService.sendEmail(email, "Создание аккаунта", "Здравствуйте! Ваш аккаунт на сайте forum был успешно создан.");
+            case "DELETE" ->
+                    emailService.sendEmail(email, "Удаление аккаунта", "Здравствуйте! Ваш аккаунт был удалён.");
+            default -> log.error("Operation not supported");
+        }
     }
 }

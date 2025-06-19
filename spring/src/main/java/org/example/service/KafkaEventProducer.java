@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class KafkaEventProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void send(String topic, String message) {
-        kafkaTemplate.send(topic, message);
+    public void send(String email, String action) {
+        kafkaTemplate.send("user-events", "%s:%s".formatted(action, email));
     }
 }

@@ -21,7 +21,7 @@ public class UserService {
     public UserDTO createUser(UserDTO userDTO) {
         User user = mapper.toEntity(userDTO, User.class);
         user = userRepository.save(user);
-        kafkaEventProducer.send("user-create", "пользователь создан");
+        kafkaEventProducer.send("CREATE", user.getEmail());
         return mapper.toDto(user, UserDTO.class);
     }
 
@@ -33,7 +33,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        kafkaEventProducer.send("user-delete", "пользователь удален");
+        kafkaEventProducer.send("DELETE", user.getEmail());
         userRepository.delete(user);
     }
 
