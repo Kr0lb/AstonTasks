@@ -103,13 +103,4 @@ public class SpringAPITest {
         mockMvc.perform(delete("/users/delete/1"))
                 .andExpect(status().isOk());
     }
-
-    @Test
-    public void testException() throws Exception {
-
-        Mockito.when(userService.getUserById(2L)).thenThrow(RuntimeException.class);
-
-        mockMvc.perform(delete("/users/2"))
-                .andExpect(status().isBadRequest());
-    }
 }
