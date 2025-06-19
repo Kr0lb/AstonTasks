@@ -2,6 +2,7 @@ import org.example.dto.UserDTO;
 import org.example.entity.User;
 import org.example.mapper.Mapper;
 import org.example.repository.UserRepository;
+import org.example.service.KafkaEventProducer;
 import org.example.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
+@EmbeddedKafka(partitions = 1, topics = "user-events")
 public class SpringServiceTest {
 
     @InjectMocks
@@ -23,6 +26,9 @@ public class SpringServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private KafkaEventProducer kafkaEventProducer;
 
     @Mock
     private Mapper<User, UserDTO> mapper;

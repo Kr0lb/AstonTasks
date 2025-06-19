@@ -22,7 +22,6 @@ public class KafkaConsumerService {
                     emailService.sendEmail(email, "Создание аккаунта", "Здравствуйте! Ваш аккаунт на сайте forum был успешно создан.");
             case "DELETE" ->
                     emailService.sendEmail(email, "Удаление аккаунта", "Здравствуйте! Ваш аккаунт был удалён.");
-            default -> log.error("Operation not supported");
         }
     }
 }
