@@ -11,6 +11,7 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "user-create", groupId = "notification-group")
     public void listenUserCreate(String message) {
-        System.err.println(message);
+        emailService.sendEmail("pivamaks@gmail.com", "subject", message);
+        System.err.println("create");
     }
 }
