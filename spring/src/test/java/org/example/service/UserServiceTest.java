@@ -1,9 +1,9 @@
+package org.example.service;
+
 import org.example.dto.UserDTO;
 import org.example.entity.User;
 import org.example.mapper.Mapper;
 import org.example.repository.UserRepository;
-import org.example.service.KafkaEventProducer;
-import org.example.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +19,7 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @EmbeddedKafka(partitions = 1, topics = "user-events")
-public class SpringServiceTest {
-
+class UserServiceTest {
     @InjectMocks
     private UserService userService;
 

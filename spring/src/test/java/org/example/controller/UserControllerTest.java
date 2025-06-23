@@ -1,6 +1,7 @@
+package org.example.controller;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.SpringMain;
-import org.example.controller.UserController;
 import org.example.dto.UserDTO;
 import org.example.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -17,15 +18,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 @ContextConfiguration(classes = SpringMain.class)
-@Import(SpringAPITest.MockConfig.class)
-public class SpringAPITest {
-
+@Import(UserControllerTest.MockConfig.class)
+class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -103,4 +105,5 @@ public class SpringAPITest {
         mockMvc.perform(delete("/users/delete/1"))
                 .andExpect(status().isOk());
     }
+
 }

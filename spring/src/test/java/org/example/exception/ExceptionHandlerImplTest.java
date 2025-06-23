@@ -1,3 +1,5 @@
+package org.example.exception;
+
 import org.example.SpringMain;
 import org.example.controller.UserController;
 import org.example.service.UserService;
@@ -16,9 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @ContextConfiguration(classes = SpringMain.class)
-@Import(SpringAPITest.MockConfig.class)
-public class SpringExceptionHandlerTest {
-
+@Import(ExceptionHandlerImplTest.MockConfig.class)
+class ExceptionHandlerImplTest {
     @Autowired
     private MockMvc mockMvc;
 
