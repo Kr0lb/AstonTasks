@@ -18,8 +18,10 @@ public class KafkaConsumerService {
         String email = parts[1];
 
         switch (events) {
-            case "CREATE" ->
+            case "CREATE" ->{
                     emailService.sendEmail(email, "Создание аккаунта", "Здравствуйте! Ваш аккаунт на сайте forum был успешно создан.");
+                System.err.println("<UNK> <UNK> <UNK>");
+            }
             case "DELETE" ->
                     emailService.sendEmail(email, "Удаление аккаунта", "Здравствуйте! Ваш аккаунт был удалён.");
         }
