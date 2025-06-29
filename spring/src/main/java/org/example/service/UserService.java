@@ -3,10 +3,12 @@ package org.example.service;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserDTO;
 import org.example.entity.User;
+import org.example.enums.MsgType;
 import org.example.mapper.Mapper;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,8 +22,9 @@ public class UserService {
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = mapper.toEntity(userDTO, User.class);
+        user.setCreatedAt(LocalDateTime.now());
         user = userRepository.save(user);
-        kafkaEventProducer.send("CREATE", user.getEmail());
+        kafkaEventProducer.send(MsgType.CREATE, user.getEmail());
         return mapper.toDto(user, UserDTO.class);
     }
 
@@ -33,7 +36,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        kafkaEventProducer.send("DELETE", user.getEmail());
+        kafkaEventProducer.send(MsgType.DELETE, user.getEmail());
         userRepository.delete(user);
     }
 

@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.enums.MsgType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ class KafkaEventProducerTest {
 
     @Test
     void send() {
-        kafkaEventProducer.send("test@example.com", "CREATE");
+        kafkaEventProducer.send(MsgType.CREATE,"test@example.com");
 
         verify(kafkaTemplate, times(1)).send(
                 eq("user-events"),
