@@ -16,11 +16,21 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback
 
         - id: notification-service
           uri: lb://notification-service
           predicates:
             - Path=/notify/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: notifyCircuitBreaker
+                fallbackUri: forward:/fallback
 eureka:
   client:
     service-url:
