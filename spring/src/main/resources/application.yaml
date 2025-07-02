@@ -1,43 +1,5 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: user-service
-  data:
-    jdbc:
-      dialect: postgresql
-  datasource:
-    username: postgres
-    password: root
-    url: jdbc:postgresql://localhost:5432/hibernate
-  jpa:
-    hibernate:
-      ddl-auto: none
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: notification-group
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-  mail:
-    host: smtp.ethereal.email
-    port: 587
-    username: alvina.okuneva80@ethereal.email
-    password: zzy5XX75154cWpw7kX
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-logging:
-  file:
-    name: logs/SpringAstonTasks.log
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+  config:
+    import: configserver:http://localhost:8888

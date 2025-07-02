@@ -33,6 +33,7 @@
         <module>notification-service</module>
         <module>eureka-server</module>
         <module>gateway-service</module>
+        <module>config-service</module>
     </modules>
 
     <properties>

@@ -1,30 +1,5 @@
-server:
-  port: 8082
-
 spring:
   application:
-    name: notification-service
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: notification-group
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-  mail:
-    host: smtp.ethereal.email
-    port: 587
-    username: alvina.okuneva80@ethereal.email
-    password: zzy5XX75154cWpw7kX
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+    name: notify-service
+  config:
+    import: configserver:http://localhost:8888
