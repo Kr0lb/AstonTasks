@@ -29,7 +29,7 @@
     <modules>
         <module>hashMap</module>
         <module>hibernate</module>
-        <module>spring</module>
+        <module>user-service</module>
         <module>notification-service</module>
         <module>eureka-server</module>
         <module>gateway-service</module>

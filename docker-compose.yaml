@@ -30,7 +30,7 @@ services:
       - config-service
 
   user-service:
-    build: ./spring
+    build: ./user-service
     ports:
       - "8081:8081"
     depends_on:
